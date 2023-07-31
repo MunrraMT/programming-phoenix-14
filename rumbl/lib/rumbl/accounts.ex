@@ -20,4 +20,8 @@ defmodule Rumbl.Accounts do
   def get_user_by(params) do
     Repo.get_by(User, params)
   end
+
+  def change_set(%User{} = user) do
+    User.changeset(user, {})
+  end
 end
