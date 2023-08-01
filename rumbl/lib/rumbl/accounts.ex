@@ -30,4 +30,14 @@ defmodule Rumbl.Accounts do
     |> User.changeset(attributes)
     |> Repo.insert()
   end
+
+  def change_registration(%User{} = user, params) do
+    User.registration_changeset(user, params)
+  end
+
+  def register_user(attributes \\ %{}) do
+    %User{}
+    |> User.registration_changeset(attributes)
+    |> Repo.insert()
+  end
 end
