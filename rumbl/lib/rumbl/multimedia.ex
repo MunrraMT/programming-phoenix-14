@@ -70,11 +70,8 @@ defmodule Rumbl.Multimedia do
   end
 
   def create_category!(name) do
-    %Category{}
-    |> Repo.insert!(
-      %Category{name: name},
-      on_conflict: :nothing
-    )
+    %Category{name: name}
+    |> Repo.insert!(on_conflict: :nothing)
   end
 
   @doc """
