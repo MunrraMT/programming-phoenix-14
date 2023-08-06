@@ -28,6 +28,12 @@ defmodule Rumbl.Multimedia do
     |> Repo.all()
   end
 
+  def list_alphabetical_categories do
+    Category
+    |> Category.alphabetical()
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single video.
 
