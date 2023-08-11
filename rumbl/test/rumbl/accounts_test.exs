@@ -78,7 +78,7 @@ defmodule Rumbl.AccountsTest do
                Accounts.authenticate_by_username_and_password(user.username, "bad_password")
     end
 
-    test "returns not found error with no matching user for username", %{user: user} do
+    test "returns not found error with no matching user for username" do
       assert {:error, :not_found} =
                Accounts.authenticate_by_username_and_password("unknown_user", @password)
     end
