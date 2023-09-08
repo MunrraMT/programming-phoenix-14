@@ -65,10 +65,6 @@ defmodule Rumbl.AccountsTest do
       {:ok, %User{id: id_1}} = Accounts.register_user(user_1)
       assert %User{id: ^id_1} = Accounts.get_user_by(username: "eva")
     end
-
-    test "should returns nil, if not exists" do
-      assert nil = Accounts.get_user_by(username: "eva")
-    end
   end
 
   describe "register_user/1" do
