@@ -4,6 +4,73 @@ defmodule Rumbl.AccountsTest do
   alias Rumbl.Accounts
   alias Rumbl.Accounts.User
 
+  describe "list_users/0" do
+    test "should returns all users, return two users if two users exists" do
+      user_1 = %{
+        name: "User",
+        username: "eva",
+        password: "secret"
+      }
+
+      user_2 = %{
+        name: "User2",
+        username: "eva2",
+        password: "secret2"
+      }
+
+      {:ok, %User{id: id_1}} = Accounts.register_user(user_1)
+      {:ok, %User{id: id_2}} = Accounts.register_user(user_2)
+      assert [%User{id: ^id_1}, %User{id: ^id_2}] = Accounts.list_users()
+    end
+
+    test "should returns all users, return empty if no users exists" do
+      assert [] = Accounts.list_users()
+    end
+  end
+
+  describe "get_user/1" do
+    test "should returns user by id, if exists" do
+      user_1 = %{
+        name: "User",
+        username: "eva",
+        password: "secret"
+      }
+
+      {:ok, %User{id: id_1}} = Accounts.register_user(user_1)
+      assert %User{id: ^id_1} = Accounts.get_user(id_1)
+    end
+  end
+
+  describe "get_user!/1" do
+    test "should returns user by id, if exists" do
+      user_1 = %{
+        name: "User",
+        username: "eva",
+        password: "secret"
+      }
+
+      {:ok, %User{id: id_1}} = Accounts.register_user(user_1)
+      assert %User{id: ^id_1} = Accounts.get_user!(id_1)
+    end
+  end
+
+  describe "get_user_by!/1" do
+    test "should returns user by params, if exists" do
+      user_1 = %{
+        name: "User",
+        username: "eva",
+        password: "secret"
+      }
+
+      {:ok, %User{id: id_1}} = Accounts.register_user(user_1)
+      assert %User{id: ^id_1} = Accounts.get_user_by(username: "eva")
+    end
+
+    test "should returns nil, if not exists" do
+      assert nil = Accounts.get_user_by(username: "eva")
+    end
+  end
+
   describe "register_user/1" do
     @valid_attrs %{
       name: "User",
