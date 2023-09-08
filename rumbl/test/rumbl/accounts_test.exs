@@ -54,7 +54,7 @@ defmodule Rumbl.AccountsTest do
     end
   end
 
-  describe "get_user_by!/1" do
+  describe "get_user_by/1" do
     test "should returns user by params, if exists" do
       user_1 = %{
         name: "User",
