@@ -1,6 +1,6 @@
 import Player from './player';
 
-const video = {
+const Video = {
   init(socket, element) {
     if (!element) return;
 
@@ -17,9 +17,18 @@ const video = {
   onReady(videoId, socket) {
     const msgContainer = document.querySelector('#msg-container');
     const msgInput = document.querySelector('#msg-input');
-    const postButton = document.querySelector('#msg-sumbit');
+    const postButton = document.querySelector('#msg-submit');
     const vidChannel = socket.channel('videos:' + videoId);
+
+    vidChannel
+      .join()
+      .receive('ok', (resp) => {
+        console.log('Joined the video channel', resp);
+      })
+      .receive('error', (reason) => {
+        console.log('Join failed', reason);
+      });
   },
 };
 
-export default video;
+export default Video;

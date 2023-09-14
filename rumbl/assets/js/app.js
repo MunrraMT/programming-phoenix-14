@@ -18,12 +18,4 @@ import socket from './socket';
 import Video from './video';
 import Player from './player';
 
-const video = document.querySelector('#video');
-
-Video.init(socket, video);
-
-if (!!video) {
-  Player.init(video.id, video.getAttribute('data-player-id'), () => {
-    console.log('Player ready!');
-  });
-}
+Video.init(socket, document.querySelector('#video'));
