@@ -20,6 +20,10 @@ const Video = {
     const postButton = document.querySelector('#msg-submit');
     const vidChannel = socket.channel('videos:' + videoId);
 
+    vidChannel.on('ping', ({ count }) => {
+      console.log('PING', count);
+    });
+
     vidChannel
       .join()
       .receive('ok', (resp) => {
