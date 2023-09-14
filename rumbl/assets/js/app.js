@@ -10,14 +10,17 @@ import css from '../css/app.css';
 // Import dependencies
 //
 import 'phoenix_html';
-import Player from './player';
 
 // Import local files
 //
 // Local files can be imported directly using relative paths, for example:
-// import socket from "./socket"
+import socket from './socket';
+import Video from './video';
+import Player from './player';
 
 const video = document.querySelector('#video');
+
+Video.init(socket, video);
 
 if (!!video) {
   Player.init(video.id, video.getAttribute('data-player-id'), () => {

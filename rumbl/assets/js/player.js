@@ -17,14 +17,10 @@ const Player = {
       width: '420',
       videoId: playerId,
       events: {
-        onReady: (event) => onPlayerReady(event),
+        onReady: (event) => onReady(event),
         onStateChange: (event) => this.onPlayerStateChange(event),
       },
     });
-  },
-
-  onPlayerReady(event) {
-    event.target.playVideo();
   },
 
   onPlayerStateChange(event) {},
