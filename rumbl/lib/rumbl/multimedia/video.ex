@@ -5,6 +5,8 @@ defmodule Rumbl.Multimedia.Video do
   alias Rumbl.Accounts.User
   alias Rumbl.Multimedia.Category
 
+  @primary_key {:id, Rumbl.Multimedia.Permalink, autogenerate: true}
+
   schema "videos" do
     field(:description, :string)
     field(:title, :string)
