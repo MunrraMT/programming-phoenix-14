@@ -14,6 +14,12 @@ const Video = {
     });
   },
 
+  esc(str) {
+    const div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+  },
+
   onReady(videoId, socket) {
     const msgContainer = document.querySelector('#msg-container');
     const msgInput = document.querySelector('#msg-input');
@@ -40,17 +46,11 @@ const Video = {
     vidChannel
       .join()
       .receive('ok', (resp) => {
-        console.log('Joined the video channel', resp);
+        this.scheduleMessages(msgContainer, resp.annotations);
       })
       .receive('error', (reason) => {
         console.log('Join failed', reason);
       });
-  },
-
-  esc(str) {
-    const div = document.createElement('div');
-    div.appendChild(document.createTextNode(str));
-    return div.innerHTML;
   },
 
   renderAnnotation(msgContainer, { user, body, at }) {
@@ -58,13 +58,43 @@ const Video = {
 
     template.innerHTML = `
     <a href="#" data-seek="${this.esc(at)}">
+      [${this.formatTime(at)}]
       <strong>${this.esc(user.username)}: </strong>
       <span>${this.esc(body)}</span>
     </a>
     `;
 
+    template.addEventListener('click', () => {
+      Player.seekTo(this.esc(at));
+    });
+
     msgContainer.appendChild(template);
     msgContainer.scrollTop = msgContainer.scrollHeight;
+  },
+
+  scheduleMessages(msgContainer, annotations) {
+    clearTimeout(this.scheduleTimer);
+
+    this.scheduleTimer = setTimeout(() => {
+      const ctime = Player.getCurrentTime();
+      const remaining = this.renderAtTime(annotations, ctime, msgContainer);
+
+      this.scheduleMessages(msgContainer, remaining);
+    }, 1000);
+  },
+
+  renderAtTime(annotations, seconds, msgContainer) {
+    return annotations.filter((ann) => {
+      if (ann.at > seconds) return true;
+      this.renderAnnotation(msgContainer, ann);
+      return false;
+    });
+  },
+
+  formatTime(at) {
+    const date = new Date(null);
+    date.setSeconds(at / 1000);
+    return date.toISOString().slice(14, -5);
   },
 };
 

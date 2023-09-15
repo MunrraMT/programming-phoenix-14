@@ -29,8 +29,8 @@ const Player = {
     return Math.floor(this.player.getCurrentTime() * 1000);
   },
 
-  seekTo(milsec) {
-    return this.player.seekTo(milsec / 1000);
+  seekTo(seconds) {
+    this.player.seekTo(seconds / 1000);
   },
 };
 
