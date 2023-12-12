@@ -1,4 +1,5 @@
 defmodule InfoSys.Counter do
+  # use GenServer, restart: :permanent
   use GenServer
 
   # client side
@@ -13,20 +14,38 @@ defmodule InfoSys.Counter do
 
   # server side
 
+  def child_spec(arg) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, [arg]},
+      restart: :temporary,
+      shutdown: 5_000,
+      type: :worker
+    }
+  end
+
+  @impl true
   def init(initial_value) do
-    Process.send_after(self(), :tick, 1000)
+    Process.send_after(self(), :tick, 1_000)
     {:ok, initial_value}
   end
 
+  @impl true
   def handle_cast(:increment, value), do: {:noreply, value + 1}
+
+  @impl true
   def handle_cast(:decrement, value), do: {:noreply, value - 1}
+
+  @impl true
   def handle_call(:value, _from, value), do: {:reply, value, value}
 
+  @impl true
   def handle_info(:tick, 0), do: raise("Boom!")
 
+  @impl true
   def handle_info(:tick, value) do
     IO.puts("tick #{value}")
-    Process.send_after(self(), :tick, 1000)
+    Process.send_after(self(), :tick, 1_000)
     {:noreply, value - 1}
   end
 end

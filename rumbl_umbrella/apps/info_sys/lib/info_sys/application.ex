@@ -11,6 +11,7 @@ defmodule InfoSys.Application do
       # Starts a worker by calling: InfoSys.Worker.start_link(arg)
       # {InfoSys.Worker, arg}
 
+      # Supervisor.child_spec({InfoSys.Counter, 10}, restart: :permanent)
       {InfoSys.Counter, 10}
     ]
 
