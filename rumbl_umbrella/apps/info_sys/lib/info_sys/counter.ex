@@ -9,20 +9,20 @@ defmodule InfoSys.Counter do
   def value(pid), do: GenServer.call(pid, :value)
 
   def start_link(initial_value) do
-    GenServer.start_link(__MODULE__, initial_value, name: __MODULE__)
+    GenServer.start_link(__MODULE__, initial_value)
   end
 
   # server side
 
-  def child_spec(arg) do
-    %{
-      id: __MODULE__,
-      start: {__MODULE__, :start_link, [arg]},
-      restart: :temporary,
-      shutdown: 5_000,
-      type: :worker
-    }
-  end
+  # def child_spec(arg) do
+  #   %{
+  #     id: __MODULE__,
+  #     start: {__MODULE__, :start_link, [arg]},
+  #     restart: :temporary,
+  #     shutdown: 5_000,
+  #     type: :worker
+  #   }
+  # end
 
   @impl true
   def init(initial_value) do

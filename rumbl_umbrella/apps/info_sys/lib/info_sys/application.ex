@@ -12,7 +12,12 @@ defmodule InfoSys.Application do
       # {InfoSys.Worker, arg}
 
       # Supervisor.child_spec({InfoSys.Counter, 10}, restart: :permanent)
-      {InfoSys.Counter, 10}
+
+      # {InfoSys.Counter, 10}
+
+      # Supervisor.child_spec({InfoSys.Counter, 10}, id: :my_worker_1),
+      # Supervisor.child_spec({InfoSys.Counter, 5}, id: :my_worker_2),
+      # Supervisor.child_spec({InfoSys.Counter, 15}, id: :my_worker_3)
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
