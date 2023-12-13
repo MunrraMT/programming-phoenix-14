@@ -27,3 +27,11 @@ secret_key_base =
 config :rumbl_web, RumblWeb.Endpoint,
   http: [:inet6, port: String.to_integer(System.get_env("PORT") || "4000")],
   secret_key_base: secret_key_base
+
+wolfram_app_id =
+  System.get_env("WOLFRAM_APP_ID") ||
+    raise """
+    enviroment variable WOLFRAM_APP_ID is missing
+    """
+
+config :info_sys, :wolfram, app_id: wolfram_app_id
