@@ -61,8 +61,4 @@ defmodule InfoSys do
       result
     end)
   end
-
-  def hello do
-    :world
-  end
 end
