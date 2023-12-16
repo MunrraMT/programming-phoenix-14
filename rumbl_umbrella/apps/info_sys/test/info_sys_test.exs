@@ -1,54 +1,26 @@
 defmodule InfoSysTest do
   use ExUnit.Case, async: true
   doctest InfoSys
-  alias InfoSys.Cache
-  @moduletag clear_interval: 100
+  alias InfoSys.Result
 
-  defp assert_shutdown(pid) do
-    ref = Process.monitor(pid)
-    Process.unlink(pid)
-    Process.exit(pid, :kill)
+  defmodule TestBackend do
+    def name(), do: "Wolfram"
 
-    assert_receive {:DOWN, ^ref, :process, ^pid, :killed}
-  end
+    def compute("none", _opts), do: []
+    def compute("boom", _opts), do: raise("boom!")
+    def compute("timeout", _opts), do: Process.sleep(:infinity)
 
-  defp eventually(func) do
-    if func.() do
-      true
-    else
-      Process.sleep(10)
-      eventually(func)
+    def compute("result", _opts) do
+      [%Result{backend: __MODULE__, text: "result"}]
     end
   end
 
-  setup %{test: name, clear_interval: clear_interval} do
-    {:ok, pid} = Cache.start_link(name: name, clear_interval: clear_interval)
-    {:ok, name: name, pid: pid}
+  test "compute/2 with backend results" do
+    assert [%Result{backend: TestBackend, text: "result"}] =
+             InfoSys.compute("result", backends: [TestBackend])
   end
 
-  test "key value pairs can be put and fetched from cache", %{name: name} do
-    assert :ok = Cache.put(name, :key1, :value1)
-    assert :ok = Cache.put(name, :key2, :value2)
-
-    assert Cache.fetch(name, :key1) == {:ok, :value1}
-    assert Cache.fetch(name, :key2) == {:ok, :value2}
-  end
-
-  test "unfound entry returns error", %{name: name} do
-    assert Cache.fetch(name, :not_exist) == :error
-  end
-
-  test "clears all entries after clear interval", %{name: name} do
-    assert :ok = Cache.put(name, :key1, :value1)
-    assert Cache.fetch(name, :key1) == {:ok, :value1}
-    assert eventually(fn -> Cache.fetch(name, :key1) == :error end)
-  end
-
-  @tag clear_interval: :timer.minutes(1)
-  test "values are cleaned up on exit", %{name: name, pid: pid} do
-    assert :ok === Cache.put(name, :key1, :value1)
-    assert_shutdown(pid)
-    {:ok, _cache} = Cache.start_link(name: name)
-    assert Cache.fetch(name, :key1) == :error
+  test "compute/2 with no backend results" do
+    assert [] = InfoSys.compute("none", backends: [TestBackend])
   end
 end

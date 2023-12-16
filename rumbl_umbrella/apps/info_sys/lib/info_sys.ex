@@ -10,7 +10,7 @@ defmodule InfoSys do
   def compute(query, opts \\ []) do
     timeout = opts[:timeout] || :timer.seconds(10)
     opts = Keyword.put_new(opts, :limit, 10)
-    backends = opts[:backend] || @backends
+    backends = opts[:backends] || @backends
 
     {uncached_backends, cached_results} = fetch_cached_results(backends, query, opts)
 
