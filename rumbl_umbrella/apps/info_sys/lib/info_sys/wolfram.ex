@@ -1,11 +1,11 @@
 defmodule InfoSys.Wolfram do
   import SweetXml
-
   alias InfoSys.Result
 
   @behaviour InfoSys.Backend
 
   @base "http://api.wolframalpha.com/v2/query"
+  @http Application.get_env(:info_sys, :wolfram)[:http_client] || :httpc
 
   @impl true
   def name(), do: "wolfram"
@@ -31,7 +31,7 @@ defmodule InfoSys.Wolfram do
       query
       |> url_generator()
       |> String.to_charlist()
-      |> :httpc.request()
+      |> @http.request()
 
     body
   end
